@@ -1,15 +1,22 @@
 import classNames from "classnames"
-import { useRef } from "react"
+import { useRef, useState } from "react"
 import { InputCheckboxComponent } from "./types"
 
 export const InputCheckbox: InputCheckboxComponent = ({ id, checked = false, disabled, onChange }) => {
   const { current: inputId } = useRef(`RampInputCheckbox-${id}`)
+  const [value, setValue] = useState<boolean>(checked)
+
+  const handleCheckboxChange = () => {
+    const newValue = !value
+    setValue(newValue)
+    onChange(newValue)
+  }
 
   return (
-    <div className="RampInputCheckbox--container" data-testid={inputId}>
+    <div className="RampInputCheckbox--container" data-testid={inputId} onClick={handleCheckboxChange}>
       <label
         className={classNames("RampInputCheckbox--label", {
-          "RampInputCheckbox--label-checked": checked,
+          "RampInputCheckbox--label-checked": value,
           "RampInputCheckbox--label-disabled": disabled,
         })}
       />
@@ -17,9 +24,8 @@ export const InputCheckbox: InputCheckboxComponent = ({ id, checked = false, dis
         id={inputId}
         type="checkbox"
         className="RampInputCheckbox--input"
-        checked={checked}
+        checked={value}
         disabled={disabled}
-        onChange={() => onChange(!checked)}
       />
     </div>
   )
